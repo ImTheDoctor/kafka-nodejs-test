@@ -8,18 +8,14 @@ services:
       - "3007:3007"
     depends_on:
       - postgres
-    # environment:
-    #   - DATABASE_URL=postgres://postgres:postgres@localhost:5432/authDB
   product:
     build:
       context: ./product-service
       dockerfile: Dockerfile
     ports:
       - "3008:3008"
-    # depends_on:
-    #   - mongo
-    # environment:
-    #   - MONGO_URL=mongodb://mongo:27017/product_db
+    depends_on:
+      - mongo
   postgres:
     image: postgres:11
     ports:
@@ -27,88 +23,19 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-  # mongo:
-  #   image: mongo:4
-  #   volumes:
-  #     - mongo_data:/data/db
+  mongo:
+    image: mongo:4
 volumes:
   postgres_data:
-  # mongo_data:
+  mongo_data:
 
-
-
-  # zookeeper:
-  #   image: wurstmeister/zookeeper
-  #   container_name: zookeeper
-  #   ports:
-  #     - 2181:2181
-  # kafka:
-  #   image: wurstmeister/kafka
-  #   container_name: kafka
-  #   depends_on:
-  #     - zookeeper
-  #   environment:
-  #     KAFKA_ADVERTISED_HOST_NAME: kafka
-  #     # KAFKA_CREATE_TOPICS: sales-topic:1:1
-  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-  #   ports:
-  #     - 9092:9092
-  #   volumes:
-  #     - .data/kafka:/var/run/docker.sock
-  # postgres:
-  #   image: postgres
-  #   container_name: postgres
-  #   environment:
-  #     - POSTGRES_USER = postgres
-  #     - POSTGRES_PASSWORD = postgres
-  #     - POSTGRES_DB = postgres
-  #   ports:
-  #     - 5432:5432
-  #   volumes:
-  #     - ./data/postgres:var/lib/postgres/data
-  # mongo:
-    # image: mongo
-    # container_name: mongo
-    # # environment:
-    # #   POSTGRES_USER: ${POSTGRES_USER}
-    # #   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    # ports:
-    #   - 27017:27017
-    # volumes:
-    #   - ./data/mongo:data/db
-  # auth-service:
-  #   image: auth-service
-  #   container_name: auth-service
-  #   build: './auth-service'
-    # volumes:
-    #   - ./auth-service:/app
-    # depends_on:
-    #   - postgres
-    #   - kafka
-    # environment:
-      # - POSTGRES_URL = postgres://postgres:postgres@postgres:5432/postgres
-      # - PORT = 8080
-      # - KAFKA_BOOTSTRAP_SERVERS = kafka:9092
-      # - KAFKA_TOPIC = topic1
-  #   ports:
-  #     - 8081:8080
-  # product-service:
-  #   image: product-service
-  #   container_name: product-service
-  #   build: ./product-service
-    
-    # volumes:
-    #   - ./product-service:/app
-    # depends_on:
-    #   - mongo
-    #   - kafka
-    # environment:
-      # - MONGO_URL = mongodb://mongo:27017/product-service
-      # - PORT = 8081
-      # - KAFKA_BOOTSTRAP_SERVERS = kafka:9092
-      # - KAFKA_TOPIC = topic1
-
-
-  
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
